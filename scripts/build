@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -eux
+
+VERSION="${VERSION:-dev}"
+GOOS="${GOOS:-linux}"
+
+export CGO_ENABLED=0
+
+my_dir="$( cd "$( dirname "${0}" )" && pwd )"
+base_dir="$( cd "${my_dir}/.." && pwd )"
+
+mkdir -p "${base_dir}/assets"
+
+pushd "${base_dir}" > /dev/null
+  GOOS="${GOOS}" go build \
+      -o "${base_dir}/assets/check" \
+      ./cmd/check
+  GOOS="${GOOS}" go build \
+      -o "${base_dir}/assets/in" \
+      ./cmd/in
+  GOOS="${GOOS}" go build \
+      -o "${base_dir}/assets/out" \
+      ./cmd/out
+popd > /dev/null
